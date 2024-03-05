@@ -26,6 +26,8 @@
     int frame = 0;
     float platform_y = 0;
     Vector2 posicao = {0,0}; 
+    float gravity = 0.15;
+    float velocity_y = 0;
 
     Rectangle player_run;
     Rectangle player_idle; 
@@ -43,9 +45,9 @@
     player_jump_tex = LoadTexture("resources/player_jump_tex.png");
     player_landing_tex = LoadTexture("resources/player_landing_tex.png");
 
-    frameWidth_run = player_run_tex.width/8;
+    frameWidth_run = (float) player_run_tex.width/8;
     frameHeight_run = player_run_tex.height;
-    frameWidth_idle = player_idle_tex.width/12;
+    frameWidth_idle = (float) player_idle_tex.width/12;
     frameHeight_idle = player_idle_tex.height;
     frameWidth_jump = player_jump_tex.width;
     frameHeight_jump = player_jump_tex.height;
@@ -83,15 +85,15 @@
             moving=1;
 
             //character animation
-             if(player_run.width<0)
+            if(player_run.width<0)
                 player_run.width = -player_run.width; 
+
             timer += GetFrameTime();
+            player_run.x = frameWidth_run * frame;
 
-                player_run.x = frameWidth_run * frame;
-
-                if(timer >=0.2f){
-                    timer = 0.0f;
-                    frame += 1;
+            if(timer >=0.2f){
+                timer = 0.0f;
+                frame += 1;
             }
 
             frame = frame%maxframes_run;
@@ -108,14 +110,15 @@
             //animation
             if(player_run.width>0)
                 player_run.width = -player_run.width;  
+
             timer += GetFrameTime();
+            player_run.x = frameWidth_run * frame;
 
-                player_run.x = frameWidth_run * frame;
-
-                if(timer >=0.2f){
-                    timer = 0.0f;
-                    frame += 1;
+            if(timer >=0.2f){
+                timer = 0.0f;
+                frame += 1;
             }
+
             frame = frame%maxframes_run;
 
             //movement
@@ -142,16 +145,17 @@
             }
 
             //jump
-            jumptimer++;
-
-            if (jumptimer<30){
-                posicao.y -=5;   
+            velocity_y = 6;
+            jumptimer ++;
+           
+            if (jumptimer < 40){
+                posicao.y -= velocity_y*jumptimer - gravity*jumptimer*jumptimer/2 - (velocity_y*(jumptimer-1) - gravity*(jumptimer-1)*(jumptimer-1)/2);   
                 playerhitbox.y=posicao.y;
             }
             
             //fall
             else{
-                posicao.y +=5;
+                posicao.y -= velocity_y*jumptimer - gravity*jumptimer*jumptimer/2 - (velocity_y*(jumptimer-1) - gravity*(jumptimer-1)*(jumptimer-1)/2); 
                 playerhitbox.y=posicao.y;
             }
 
@@ -175,17 +179,10 @@
             }
 
             //fall
-            posicao.y +=5;
+            jumptimer++;
+            posicao.y -=  -gravity*jumptimer*jumptimer/2 + (gravity*(jumptimer-1)*(jumptimer-1)/2); 
             playerhitbox.y=posicao.y;
         }
-
-        //stop fall
-        if(platformcollision && jumptimer >=30){
-            jump = false;
-            jumptimer = 0;
-            cont = 0;
-               
-        }     
 
         //idle animation
         if(moving == 0 && jump ==0 ){
@@ -193,13 +190,13 @@
                 player_idle.width = -abs(player_idle.width);
             else
                 player_idle.width = abs(player_idle.width);
+
             timer += GetFrameTime();
+            player_idle.x = frameWidth_idle * frame;
 
-                player_idle.x = frameWidth_idle * frame;
-
-                if(timer >=0.2f){
-                    timer = 0.0f;
-                    frame += 1;
+            if(timer >=0.2f){
+                timer = 0.0f;
+                frame += 1;
             }
 
             frame = frame%maxframes_idle;
@@ -207,10 +204,20 @@
 
          //Platform collision
             platform_y = collision_y(playerhitbox, fase2, 2);
-            if(platform_y != -1 && (posicao.y + playerhitbox.height - 10) < platform_y && (jump == 0 || (jump == 1 && jumptimer>=30))) {
-                platformcollision = 1;  
+            if(platform_y != -1 && (posicao.y + playerhitbox.height - 10) < platform_y && (jump == 0 || (jump == 1 && jumptimer>=40))) {
+                platformcollision = 1; 
+                if( jump == 0)
+                    jumptimer = 0; 
+
                 posicao.y = platform_y - playerhitbox.height + 1;
                 playerhitbox.y = posicao.y;
+
+                if (jump == 1 & jumptimer >= 40){
+                    jump = false;
+                    cont = 0;
+                    jumptimer = 0;
+                }
+
             }
 
         else 
@@ -228,10 +235,11 @@
             DrawTextureRec(player_run_tex, player_run, posicao, WHITE);
         if(moving == 0 && jump == 0 && platformcollision == 1)
             DrawTextureRec(player_idle_tex, player_idle, posicao, WHITE);
-        if(jump == 1 && jumptimer <30)
+        if(jump == 1 && jumptimer <40)
             DrawTextureRec(player_jump_tex, player_jump, posicao, WHITE);
-        if(jump == 1 && jumptimer >=30)
+        if(jump == 1 && jumptimer >=40)
            DrawTextureRec(player_landing_tex, player_landing, posicao, WHITE);           
+
     }
 
     //Unload characrer textures
