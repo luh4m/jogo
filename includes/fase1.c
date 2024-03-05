@@ -17,7 +17,6 @@ void fase1_init()
     backtext1 = LoadTexture("assets/mapajogoplat.png");
     largura_background = backtext1.width;
     altura_background = backtext1.height;
-    fase1;
 
     fase1.plataformas[0].x = 0;
     fase1.plataformas[0].y = 14 + 21 * 32;

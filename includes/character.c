@@ -212,7 +212,7 @@
                 posicao.y = platform_y - playerhitbox.height + 1;
                 playerhitbox.y = posicao.y;
 
-                if (jump == 1 & jumptimer >= 40){
+                if ((jump == 1) & (jumptimer >= 40)){
                     jump = false;
                     cont = 0;
                     jumptimer = 0;
@@ -222,6 +222,8 @@
 
         else 
             platformcollision = 0;
+        if( platformcollision == 1)
+            printf("posicao %f\n",posicao.x);
     }
 
     // character drawing

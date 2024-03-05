@@ -28,13 +28,13 @@ void enemy1_init(){
     posicao_enemy1 = (Vector2) {980,510}; // x = 980
 }
 void enemy1_movement(){
-     if (moveRight)
+    if (moveRight)
         {
-            posicao_enemy1.x += speed;
-            if (posicao_enemy1.x + inimigo.width >= fase2.plataformas[8].x + fase2.plataformas[8].width)
+        posicao_enemy1.x += speed;
+        if (posicao_enemy1.x + inimigo.width >= fase2.plataformas[8].x + fase2.plataformas[8].width)
             {
-                posicao_enemy1.x = fase2.plataformas[8].x + fase2.plataformas[8].width - inimigo.width;
-                moveRight = false;
+            posicao_enemy1.x = fase2.plataformas[8].x + fase2.plataformas[8].width - inimigo.width;
+            moveRight = false;
             }
         }
         else
@@ -48,24 +48,25 @@ void enemy1_movement(){
         }
 
         //   enemy1 animation
-            if(moveRight == false)
-                enemy1_tex.width = -abs(enemy1_tex.width); 
-            else 
-                enemy1_tex.width = abs(enemy1_tex.width); 
+    if(moveRight == false)
+        enemy1_tex.width = -abs(enemy1_tex.width); 
+    else 
+        enemy1_tex.width = abs(enemy1_tex.width); 
 
-            timer_enemy1 += GetFrameTime();
-            if(moveRight == true)
-                inimigo.x = frameWidth_enemy1 * frame_enemy1; 
-            if(moveRight == false)
-                inimigo.x = -(frameWidth_enemy1 * frame_enemy1); 
+    timer_enemy1 += GetFrameTime();
+    if(moveRight == true)
+        inimigo.x = frameWidth_enemy1 * frame_enemy1; 
+
+    if(moveRight == false)
+        inimigo.x = -(frameWidth_enemy1 * frame_enemy1); 
 
 
-                if(timer_enemy1 >=0.2f){
-                    timer_enemy1 = 0.0f;
-                    frame_enemy1 += 1;
-            }
+    if(timer_enemy1 >=0.2f){
+        timer_enemy1 = 0.0f;
+        frame_enemy1 += 1;
+    }
 
-            frame_enemy1 = frame_enemy1%maxframes_enemy1;
+    frame_enemy1 = frame_enemy1%maxframes_enemy1;
 
 }
 void draw_enemy1(){

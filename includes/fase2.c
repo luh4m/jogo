@@ -19,7 +19,6 @@ void fase2_init(){
 
     largura_background = backtext2.width;
     altura_background = backtext2.height;
-    fase2;
 
     fase2.plataformas[0].y = altura_background + 50;
     fase2.plataformas[0].x = 0;

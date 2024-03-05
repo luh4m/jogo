@@ -8,6 +8,8 @@
 #include "includes/fase2.h"
 #include "includes/fase2.c"
 #include "includes/enemy1.c"
+#include "includes/enemy2.cpp"
+#include "includes/enemy2.h"
 
 int main(){
 
@@ -23,6 +25,7 @@ int main(){
     fase2_init();
     character_init();
     enemy1_init();
+    enemy2_init();
 
     SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -41,6 +44,7 @@ int main(){
         camera_settings(&screenWidth);
         character_movement();
         enemy1_movement();
+        enemy2_movement(posicao.x,posicao.y);
         //----------------------------------------------------------------------------------
 
         // Draw
@@ -53,6 +57,7 @@ int main(){
                 draw_fase2();
                 draw_character();       
                 draw_enemy1();
+                draw_enemy2();
             EndMode2D();
 
         EndDrawing();
