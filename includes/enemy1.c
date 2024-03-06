@@ -47,20 +47,19 @@ void enemy1_movement(){
             }
         }
 
-        //   enemy1 animation
-    if(moveRight == false)
+    //   enemy1 animation
+    if(moveRight == false){
         enemy1_tex.width = -abs(enemy1_tex.width); 
-    else 
+        inimigo.x = (frameWidth_enemy1 * frame_enemy1); 
+    }
+
+    else{ 
         enemy1_tex.width = abs(enemy1_tex.width); 
+        inimigo.x = -(frameWidth_enemy1 * frame_enemy1); 
+    }
 
     timer_enemy1 += GetFrameTime();
-    if(moveRight == true)
-        inimigo.x = frameWidth_enemy1 * frame_enemy1; 
-
-    if(moveRight == false)
-        inimigo.x = -(frameWidth_enemy1 * frame_enemy1); 
-
-
+   
     if(timer_enemy1 >=0.2f){
         timer_enemy1 = 0.0f;
         frame_enemy1 += 1;

@@ -24,7 +24,7 @@
     int maxframes_idle = 12;
     float timer = 0.0f;
     int frame = 0;
-    float platform_y = 0;
+    Rectangle platform = {0,0,0,0};
     Vector2 posicao = {0,0}; 
     float gravity = 0.15;
     float velocity_y = 0;
@@ -203,13 +203,14 @@
         }
 
          //Platform collision
-            platform_y = collision_y(playerhitbox, fase2, 2);
-            if(platform_y != -1 && (posicao.y + playerhitbox.height - 10) < platform_y && (jump == 0 || (jump == 1 && jumptimer>=40))) {
+            platform = collision(playerhitbox, fase2, 2);
+            if(platform.y != -1  && (posicao.y + playerhitbox.height - 10) < platform.y && (jump == 0 || (jump == 1 && jumptimer>=40))
+            && (posicao.x + playerhitbox.width/2 >= platform.x && posicao.x + playerhitbox.width/2 <= platform.x + platform.width)) {
                 platformcollision = 1; 
                 if( jump == 0)
                     jumptimer = 0; 
 
-                posicao.y = platform_y - playerhitbox.height + 1;
+                posicao.y = platform.y - playerhitbox.height + 1;
                 playerhitbox.y = posicao.y;
 
                 if ((jump == 1) & (jumptimer >= 40)){

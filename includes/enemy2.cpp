@@ -4,20 +4,31 @@
 
 #define qtdenemy2 2 // quantos inimigos q seguem o jogador serao inicializados
 
-static InimSegue enemy2[qtdenemy2] = { 0 }; // vetor de inimigos q seguem (de structs)
+Texture2D enemy2_tex;
+static enemy2_data enemy2[qtdenemy2] = { 0 }; // vetor de inimigos q seguem (de structs)
+float timer_enemy2 = 0.0f;
+int maxframes_enemy2 = 15;
+int frame_enemy2 = 0;
+float frameWidth_enemy2;
+float frameHeight_enemy2;
 
 // inicializacao dos inimigos que perseguem o jogador 
 void enemy2_init() {
+
+	
+    enemy2_tex = LoadTexture("resources/enemy2_tex.png");
+    frameWidth_enemy2 = (float) enemy2_tex.width/11;
+    frameHeight_enemy2 = enemy2_tex.height;
+
 	for (int i = 0; i < qtdenemy2; i++) {
 
 		// coordenadas dos inimigos (so um exemplo, pode tirar do loop pra colocar coordenadas diferentes aleatorias)
-		enemy2[i].ret.x = 50 + (800 * i);
-		enemy2[i].ret.y = pow((-50it), i); // coloquei potencia pra ele aparecer as vzs de baixo e as vzs de cima (resultado par ou impar)
+		enemy2[i].pos.x = 50 + (800 * i);
+		enemy2[i].pos.y = pow((-50), i); // coloquei potencia pra ele aparecer as vzs de baixo e as vzs de cima (resultado par ou impar)
 
 		// tamanhos e cor do retangulo
-		enemy2[i].ret.width = 70;
-		enemy2[i].ret.height = 70;
-		enemy2[i].cor = RED;
+		enemy2[i].rec.width = frameWidth_enemy2;
+		enemy2[i].rec.height = frameHeight_enemy2;
 	}
 }
 
@@ -28,14 +39,39 @@ void enemy2_movement(float playerX, float playerY/*posicoes do jogador*/) {
 
 		// quando a posicao X ou Y do jogador eh maior que a posicao equivalente do inimigo,
 		// o inimigo anda mais nessa direcao. caso contrario, ele volta.
-		if ( playerX > enemy2[i].ret.x) enemy2[i].ret.x += 1; // indo para a direita
-		if (playerX < enemy2[i].ret.x) enemy2[i].ret.x -= 1; // indo para a esquerda
-		if (playerY > enemy2[i].ret.y) enemy2[i].ret.y += 1; // indo para baixo
-		if (playerY < enemy2[i].ret.y) enemy2[i].ret.y -= 1; // indo para cima
+		if ( playerX > enemy2[i].pos.x) enemy2[i].pos.x += 1; // indo para a direita
+		if (playerX < enemy2[i].pos.x) enemy2[i].pos.x -= 1; // indo para a esquerda
+		if (playerY > enemy2[i].pos.y) enemy2[i].pos.y += 1; // indo para baixo
+		if (playerY < enemy2[i].pos.y) enemy2[i].pos.y -= 1; // indo para cima
 	}
+
+	  //   enemy2 
+	for (int i = 0; i < qtdenemy2; i++){
+		if ( playerX > enemy2[i].pos.x){ // indo para a direita
+			enemy2[i].rec.width = -abs(enemy2[i].rec.width); 
+			// enemy2[i].rec.x = -frameWidth_enemy2 * frame_enemy2;
+		}
+
+		if (playerX < enemy2[i].pos.x){ // indo para a esquerda
+			enemy2[i].rec.width = abs(enemy2[i].rec.width); 	
+		}
+		enemy2[i].rec.x = frameWidth_enemy2 * frame_enemy2;
+		timer_enemy2 += GetFrameTime();
+
+		if(timer_enemy2 >=0.2f){
+			timer_enemy2 = 0.0f;
+			frame_enemy2 += 1;
+		}
+	}
+
+    frame_enemy2 = frame_enemy2%maxframes_enemy2;
 }
 
 void draw_enemy2(){
 	for (int i = 0; i < qtdenemy2; i++) 
-		DrawRectangleRec(enemy2[i].ret, enemy2[i].cor);
+		DrawTextureRec(enemy2_tex, enemy2[i].rec, (Vector2) {enemy2[i].pos.x,enemy2[i].pos.y}, WHITE);
+}
+
+void unload_enemy2_tex(){
+	UnloadTexture(enemy2_tex);
 }

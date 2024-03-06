@@ -66,6 +66,7 @@ int main(){
 
         unload_charactertex();
         unload_enemy1_tex();
+        unload_enemy2_tex();
         //----------------------------------------------------------------------------------
          CloseWindow();        // Close window and OpenGL context
     //--------------------------------------------------------------------------------------

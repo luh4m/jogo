@@ -5,7 +5,7 @@
 #ifndef COLISAO_C
 #define COLISAO_C
 
-float collision_y(Rectangle player, fase fase, int num_fase)
+Rectangle collision(Rectangle player, fase fase, int num_fase)
 {
     int count;
     if (num_fase == 1)
@@ -19,9 +19,9 @@ float collision_y(Rectangle player, fase fase, int num_fase)
     {
         if (CheckCollisionRecs(player, fase.plataformas[i]))
         {
-            return fase.plataformas[i].y;
+            return (fase.plataformas[i]);
         }
     }
-    return -1;
+    return ((Rectangle) {0,0,0,0});
 }
 #endif
