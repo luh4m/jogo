@@ -10,10 +10,10 @@ Rectangle collision(Rectangle player, fase fase, int num_fase)
     int count;
     if (num_fase == 1)
     {
-        count = 14;
+        count = 20;
     }
     else
-        count = 17;
+        count = 26;
 
     for (int i = 0; i < count; i++)
     {
@@ -22,6 +22,6 @@ Rectangle collision(Rectangle player, fase fase, int num_fase)
             return (fase.plataformas[i]);
         }
     }
-    return ((Rectangle) {0,0,0,0});
+    return ((Rectangle){0, 0, 0, 0});
 }
 #endif

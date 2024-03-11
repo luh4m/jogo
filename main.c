@@ -10,68 +10,92 @@
 #include "includes/enemy1.c"
 #include "includes/enemy2.cpp"
 #include "includes/enemy2.h"
+//#include "includes/menugameover.h"
+#include "includes/menu.h"
+#include "includes/menu.c"
+#include "includes/transition.h"
+#include "includes/transition.c"
 
-int main(){
+int main()
+{
 
     // Initialization
     //--------------------------------------------------------------------------------------
     int screenWidth = 1000;
     int screenHeight = 736;
-    bool WindowFullscreen = IsWindowFullscreen(); 
+    int button = 0;
+    bool WindowFullscreen = IsWindowFullscreen();
 
-    InitWindow(screenWidth, screenHeight, "Jogo - Projeto");
+    InitWindow(screenWidth, screenHeight, "Al Sem Ammy");
 
-    // fase1_init();
+    fase1_init();
     fase2_init();
     character_init();
     enemy1_init();
     enemy2_init();
+    //fimdejogo();
+    DefineThings();
 
-    SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
+    SetTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
     // Main game loop
-    while (!WindowShouldClose())        // Detect window close button or ESC key
+    while (!WindowShouldClose()) // Detect window close button or ESC key
     {
-        
-        if( IsKeyPressed(KEY_F) && !WindowFullscreen){
+
+        if (IsKeyPressed(KEY_F) && !WindowFullscreen)
+        {
             ToggleFullscreen();
         }
 
-        if(IsKeyPressed(KEY_F) && WindowFullscreen){
+        if (IsKeyPressed(KEY_F) && WindowFullscreen)
+        {
             ToggleBorderlessWindowed();
         }
-        
-        camera_settings(&screenWidth);
-        character_movement();
-        enemy1_movement();
-        enemy2_movement(posicao.x,posicao.y);
+        if (button == 0 || button == 2 || button == 3)
+            choose_button(&button);
+        if (button == 1){
+            camera_settings(&screenWidth, &screenHeight, transition(&playerhitbox, &posicao, &jumptimer));
+            character_movement();
+            enemy1_movement();
+            enemy2_movement(posicao.x, posicao.y);
+            //colisaoinimigos();
+        }
         //----------------------------------------------------------------------------------
 
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
-
+        ClearBackground(RAYWHITE);
+        if (button == 0 || button == 2 || button == 3)
+            DrawThings(&button);
+        if (button == 1){
             BeginMode2D(camera);
-                ClearBackground(RAYWHITE);
-                // draw_fase1();
-                draw_fase2();
-                draw_character();       
-                draw_enemy1();
-                draw_enemy2();
-            EndMode2D();
 
+            if(transition(&playerhitbox, &posicao, &jumptimer) == 1){
+                draw_fase1();
+                draw_enemy1_map1();
+                draw_enemy2_map1();
+            }
+
+            if(transition(&playerhitbox, &posicao, &jumptimer) == 2){
+                draw_fase2();
+                draw_enemy1_map2();
+                draw_enemy2_map2();
+            }
+            draw_character();
+            EndMode2D();
+        }
+        
         EndDrawing();
         //----------------------------------------------------------------------------------
     }
 
-        unload_charactertex();
-        unload_enemy1_tex();
-        unload_enemy2_tex();
-        //----------------------------------------------------------------------------------
-         CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
-     return 0;
-    }
-   
-  
-  
+    //FALTA DESCARREGAR OUTRAS TEXTURAS
+    unload_charactertex();
+    unload_enemy1_tex();
+    unload_enemy2_tex();
+    //----------------------------------------------------------------------------------
+    CloseWindow(); // Close window and OpenGL context
+                   //--------------------------------------------------------------------------------------
+    return 0;
+}

@@ -5,7 +5,7 @@
 typedef struct
 {
     Texture2D background;
-    Rectangle plataformas[17];
+    Rectangle plataformas[26];
 } fase;
 
 #endif
