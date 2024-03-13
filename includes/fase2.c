@@ -16,7 +16,7 @@ fase fase2;
 void fase2_init()
 {
 
-    backtext2 = LoadTexture("assets/maps/map2.png");
+    backtext2 = LoadTexture("assets/maps/fase2defin.png");
 
     largura_background2 = backtext2.width;
     altura_background2 = backtext2.height;
@@ -91,7 +91,7 @@ void fase2_init()
     fase2.plataformas[13].width = 608;
     fase2.plataformas[13].height = 10;
 
-    fase2.plataformas[14].y = 288 + 4;
+    fase2.plataformas[14].y = 672 + 4;
     fase2.plataformas[14].x = 4736;
     fase2.plataformas[14].width = 576;
     fase2.plataformas[14].height = 10;
@@ -155,7 +155,6 @@ void fase2_init()
 void draw_fase2()
 {
     DrawTexture(backtext2, 0, 0, WHITE);
-   
 }
 
 #endif

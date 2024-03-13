@@ -131,6 +131,7 @@ void draw_enemy1_map1(){
 void draw_enemy1_map2(){
     for(int i = 7; i<21; i++)
         DrawTextureRec(enemy1_tex,enemy1[i].recfps, (Vector2) {enemy1[i].rechitbox.x,enemy1[i].rechitbox.y},WHITE);
+    
 }
 
 void unload_enemy1_tex(){

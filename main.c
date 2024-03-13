@@ -10,11 +10,12 @@
 #include "includes/enemy1.c"
 #include "includes/enemy2.cpp"
 #include "includes/enemy2.h"
-//#include "includes/menugameover.h"
 #include "includes/menu.h"
 #include "includes/menu.c"
 #include "includes/transition.h"
 #include "includes/transition.c"
+#include "includes/sons.c"
+#include "includes/sons.h"
 
 int main()
 {
@@ -24,76 +25,115 @@ int main()
     int screenWidth = 1000;
     int screenHeight = 736;
     int button = 0;
-    bool WindowFullscreen = IsWindowFullscreen();
+    int colidiu1 = 0, colidiu2 = 0;
+    int delay=0;
 
     InitWindow(screenWidth, screenHeight, "Al Sem Ammy");
+
+    InitAudioDevice();
+    initsounds();
+
+    SetMusicVolume(music2, 0.1);
+    SetMusicVolume(music1, 0.1);
 
     fase1_init();
     fase2_init();
     character_init();
     enemy1_init();
     enemy2_init();
-    //fimdejogo();
     DefineThings();
+    FinalTransition_init();
 
     SetTargetFPS(60); // Set our game to run at 60 frames-per-second
-    //--------------------------------------------------------------------------------------
+
+    PlayMusicStream(music1);
+    PlayMusicStream(music2);
+
     // Main game loop
+    //--------------------------------------------------------------------------------------
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
-
-        if (IsKeyPressed(KEY_F) && !WindowFullscreen)
-        {
-            ToggleFullscreen();
+        if(transition(&button, &playerhitbox, &posicao, &jumptimer) == 1){
+            UpdateMusicStream(music1);
+        }
+        
+        else if(transition(&button, &playerhitbox, &posicao, &jumptimer) == 2){
+            delay+=1;
+            if(delay>120){
+                UpdateMusicStream(music2);
+            }
         }
 
-        if (IsKeyPressed(KEY_F) && WindowFullscreen)
-        {
-            ToggleBorderlessWindowed();
-        }
         if (button == 0 || button == 2 || button == 3)
             choose_button(&button);
-        if (button == 1){
-            camera_settings(&screenWidth, &screenHeight, transition(&playerhitbox, &posicao, &jumptimer));
-            character_movement();
+        if (button == 1)
+        {
+            camera_settings(&screenWidth, &screenHeight, transition(&button, &playerhitbox, &posicao, &jumptimer));
+            character_movement(pulo);
             enemy1_movement();
             enemy2_movement(posicao.x, posicao.y);
-            //colisaoinimigos();
+        }
+        if (button == 4)
+        {
+            choose_buttonover(&button);
         }
         //----------------------------------------------------------------------------------
 
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
-        ClearBackground(RAYWHITE);
-        if (button == 0 || button == 2 || button == 3)
-            DrawThings(&button);
-        if (button == 1){
-            BeginMode2D(camera);
-
-            if(transition(&playerhitbox, &posicao, &jumptimer) == 1){
-                draw_fase1();
-                draw_enemy1_map1();
-                draw_enemy2_map1();
+            ClearBackground(RAYWHITE);
+            if (button == 0 || button == 2 || button == 3)
+                DrawThings(&button);
+            if (button == 4)
+            {
+                DrawThingsover(&button);
             }
+            if (button == 1)
+            {
+                BeginMode2D(camera);
 
-            if(transition(&playerhitbox, &posicao, &jumptimer) == 2){
-                draw_fase2();
-                draw_enemy1_map2();
-                draw_enemy2_map2();
+                    if (transition(&button, &playerhitbox, &posicao, &jumptimer) == 1)
+                    {
+                        draw_fase1();
+                        draw_enemy1_map1();
+                        draw_enemy2_map1();
+                        draw_character();
+                        colidiu1 = colisaoinimigosfase1();
+                        if (colidiu1 == 1)
+                        {
+                            button = 4;
+                        }
+                    }
+                    if (transition(&button, &playerhitbox, &posicao, &jumptimer) == 2)
+                    {
+                        draw_fase2();
+                        draw_enemy1_map2();
+                        draw_enemy2_map2();
+                        draw_character();
+                        colidiu2 = colisaoinimigosfase2();
+                        if (colidiu2 == 1)
+                        {
+                            button = 4;
+                        }
+                    }
+                EndMode2D();
+
+                if (transition(&button, &playerhitbox, &posicao, &jumptimer) == 3)
+                    FinalTransition(&button);
+                
             }
-            draw_character();
-            EndMode2D();
-        }
         
         EndDrawing();
         //----------------------------------------------------------------------------------
     }
 
-    //FALTA DESCARREGAR OUTRAS TEXTURAS
+    //descarrega as texturas
     unload_charactertex();
     unload_enemy1_tex();
     unload_enemy2_tex();
+    unload_finaltex();
+    unload_menutex();
     //----------------------------------------------------------------------------------
     CloseWindow(); // Close window and OpenGL context
                    //--------------------------------------------------------------------------------------
