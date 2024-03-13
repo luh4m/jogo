@@ -14,7 +14,7 @@
 #include "enemy1.h"
 #include "enemy1.c"
 #include "enemy2.h"
-#include "enemy2.cpp"
+#include "enemy2.c"
 #include "transition.h"
 #include "transition.c"
 
@@ -219,7 +219,6 @@ void character_movement(Sound pulo)
         if (!platformcollision)
             if (IsKeyPressed(KEY_SPACE) && cont == 0)
             {
-                PlaySound(pulo);
                 jumptimer = 0;
                 cont = 1;
             }
