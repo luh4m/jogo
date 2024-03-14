@@ -219,6 +219,7 @@ void character_movement(Sound pulo)
         if (!platformcollision)
             if (IsKeyPressed(KEY_SPACE) && cont == 0)
             {
+                PlaySound(pulo);
                 jumptimer = 0;
                 cont = 1;
             }
